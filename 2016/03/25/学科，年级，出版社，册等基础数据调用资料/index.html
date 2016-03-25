@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>学科，年级，出版社，册等基础数据调用资料 | 学行，温习</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices
+册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学科，年级，出版社，册等基础数据调用资料">
+<meta property="og:url" content="http://yoursite.com/2016/03/25/学科，年级，出版社，册等基础数据调用资料/index.html">
+<meta property="og:site_name" content="学行，温习">
+<meta property="og:description" content="学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices
+册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。">
+<meta property="og:updated_time" content="2016-03-25T07:23:44.034Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学科，年级，出版社，册等基础数据调用资料">
+<meta name="twitter:description" content="学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices
+册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。">
+  
+    <link rel="alternate" href="/atom.xml" title="学行，温习" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">学行，温习</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-学科，年级，出版社，册等基础数据调用资料" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/25/学科，年级，出版社，册等基础数据调用资料/" class="article-date">
+  <time datetime="2016-03-25T06:25:37.000Z" itemprop="datePublished">2016-03-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      学科，年级，出版社，册等基础数据调用资料
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices</li>
+<li>册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h2 id="学科"><a href="#学科" class="headerlink" title="学科"></a>学科</h2><pre><code>@com.alibaba.dubbo.config.annotation.Reference
+private MetaDataServices metaDataServices;
+
+@RequestMapping(value = &quot;findSubjectValue&quot;, method = RequestMethod.POST,produces =[&quot;application/json;charset=UTF-8&quot;])
+    public List&lt;MetaDataVo&gt; findSubjectValue(HttpServletRequest request){
+        List&lt;SubjectsVo&gt; list=metaDataServices.findAllSubjects()
+        List&lt;MetaDataVo&gt; metaDataVoList = new ArrayList&lt;MetaDataVo&gt;()
+        for(SubjectsVo subjects: list){
+                MetaDataVo metaDataVo = new MetaDataVo()
+                metaDataVo.keyCode = subjects.businessKey
+                metaDataVo.keyValue = subjects.name
+                metaDataVoList.add(metaDataVo)
+        }
+        return  metaDataVoList
+    }
+
+function getSubjects(){
+    $.ajax({
+        url: &apos;metaData/findSubjectValue&apos;,
+        dataType : &apos;json&apos;,
+        type : &quot;POST&quot;,
+        success : function(data) {
+            $(&quot;#subjectsId&quot;).empty()
+            var vhtml=&quot;&lt;option value=\&quot;\&quot;&gt;请选择&lt;/option&gt;&quot;;
+            $.each(data,function(i,item){
+                vhtml+=&quot;&lt;option value=&apos;&quot;+item.keyCode+&quot;&apos;&gt;&quot;+item.keyValue+&quot;&lt;/option&gt;&quot;;
+            })
+            $(&quot;#subjectsId&quot;).html(vhtml);
+            multipleSelect()
+        }
+    });
+}
+
+&lt;div class=&quot;inline width-23&quot;&gt;
+    &lt;label  class=&quot;inline&quot;&gt;
+        学科：
+    &lt;/label&gt;
+    &lt;select data-placeholder=&quot;请选择&quot;  id=&quot;subjectsId&quot;&gt;
+        &lt;option value=&quot;&quot;&gt;请选择&lt;/option&gt;
+    &lt;/select&gt;
+&lt;/div&gt;
+</code></pre><hr>
+<h2 id="年级"><a href="#年级" class="headerlink" title="年级"></a>年级</h2><pre><code>function getGrade(){
+    $(&quot;#gradeId&quot;).empty()
+    $.ajax({
+        url: &apos;metaData/findBaseGrade&apos;,
+        dataType : &apos;text&apos;,
+        type : &quot;POST&quot;,
+        success : function(data) {
+            $(&quot;#gradeId&quot;).empty()
+            $(&quot;#gradeId&quot;).append(&quot;&lt;option value=\&quot;\&quot;&gt;请选择&lt;/option&gt;&quot;+data.replace(&apos;&lt;select&gt;&apos;,&apos;&apos;).replace(&apos;&lt;/select&gt;&apos;,&apos;&apos;));
+        }
+    });
+}
+
+@RequestMapping(value = &quot;findBaseGrade&quot;, method = RequestMethod.POST,produces =[&quot;application/json;charset=UTF-8&quot;])
+    public String findBaseGrade(HttpServletRequest request){
+        List&lt;BaseGradeVo&gt; list = metaDataServices.findBaseGrade()
+        StringBuffer jsonStrBuf=new StringBuffer()
+        jsonStrBuf.append(&quot;&lt;select&gt;&quot;)
+        for(BaseGradeVo baseGrade:list){
+            jsonStrBuf.append(&quot;&lt;option value=&apos;&quot;+baseGrade.businessKey +&quot;&apos;&gt;&quot;+baseGrade.name +&quot;&lt;/option&gt;&quot;)
+        }
+        jsonStrBuf.append(&quot;&lt;select&gt;&quot;)
+        return  jsonStrBuf.toString()
+    }    
+</code></pre><hr>
+<h2 id="出版社"><a href="#出版社" class="headerlink" title="出版社"></a>出版社</h2><pre><code>@com.alibaba.dubbo.config.annotation.Reference
+private TextBookVersionService textBookVersionService
+
+@RequestMapping(value = &quot;findTextBookVersionValue&quot;, method = RequestMethod.POST,produces =[&quot;application/json;charset=UTF-8&quot;])
+    public List&lt;MetaDataVo&gt; findTextBookVersionValue(HttpServletRequest request){
+        List&lt;TextBookVersionVo&gt; list = textBookVersionService.findAllTextBookVersion()
+        List&lt;MetaDataVo&gt; metaDataVoList = new ArrayList&lt;MetaDataVo&gt;()
+        for(TextBookVersionVo version: list){
+            MetaDataVo metaDataVo = new MetaDataVo()
+            metaDataVo.keyCode = version.businessKey
+            metaDataVo.keyValue = version.name
+            metaDataVoList.add(metaDataVo)
+        }
+        return  metaDataVoList
+    }
+
+function getBookVersion(){
+    $(&quot;#publishId&quot;).empty()
+    $.ajax({
+        url: &apos;metaData/findTextBookVersionValue&apos;,
+        dataType : &apos;json&apos;,
+        type : &quot;POST&quot;,
+        success : function(data) {
+            $(&quot;#publishId&quot;).empty()
+            var vhtml=&quot;&lt;option value=\&quot;\&quot;&gt;请选择&lt;/option&gt;&quot;;
+            $.each(data,function(i,item){
+                vhtml+=&quot;&lt;option value=&apos;&quot;+item.keyCode+&quot;&apos;&gt;&quot;+item.keyValue+&quot;&lt;/option&gt;&quot;;
+            })
+            $(&quot;#publishId&quot;).html(vhtml);
+        }
+    });
+}
+</code></pre><hr>
+<h2 id="册"><a href="#册" class="headerlink" title="册"></a>册</h2><pre><code>@RequestMapping(value = &apos;findFasciculeByPage&apos;, method = RequestMethod.POST)
+public String findFasciculeByPage(HttpServletRequest request) {
+    String name = request.getParameter(&quot;name&quot;);
+    String phases = request.getParameter(&quot;phases&quot;)
+    String grade = request.getParameter(&quot;grade&quot;)
+    String subject = request.getParameter(&quot;subject&quot;)
+    String textBookVersion = request.getParameter(&quot;textBookVersion&quot;)
+    String isDelete = request.getParameter(&quot;isDelete&quot;)
+    Map&lt;String,Object&gt; queryMap = new HashMap&lt;String,Object&gt;()
+    queryMap.put(&quot;name&quot;,name);
+    queryMap.put(&quot;phases&quot;,phases);
+    queryMap.put(&quot;grade&quot;,grade);
+    queryMap.put(&quot;subject&quot;,subject);
+    queryMap.put(&quot;textBookVersion&quot;,textBookVersion);
+    queryMap.put(&quot;isDelete&quot;,isDelete)
+    Map&lt;String, Integer&gt; currentParam = JsonHelp.parserPageParms(request)
+    PageResultVo p = fasciculeServices.findFasciculeByPage(queryMap,currentParam[JsonHelp.CURRENT_SIZE], currentParam[JsonHelp.CURRENT_PAGE])
+    JsonHelp.getPageJson(p, currentParam[JsonHelp.CURRENT_PAGE],currentParam[JsonHelp.CURRENT_SIZE])
+}
+
+@Override
+PageResultVo findFasciculeByPage(Map&lt;String, String&gt; queryMap, int pageSize , int currentPage ) {
+    PageResultVo pageResultVo = new PageResultVo()
+    List&lt;Fascicule&gt; fasciculeList=new ArrayList&lt;Fascicule&gt;();
+    List&lt;FasciculeVo&gt; fasciculeVoList = new ArrayList&lt;FasciculeVo&gt;()
+    StringBuffer sqlBuf=new StringBuffer(&quot;from Fascicule a where 1=1 &quot;);
+
+    if(StringUtils.isNotBlank(queryMap.get(&quot;isDelete&quot;))){
+        sqlBuf.append(&quot; and a.isDelete = &apos;&quot; + queryMap.get(&quot;isDelete&quot;) + &quot;&apos; &quot;);
+    }
+
+    if(Const.isNotNull(queryMap.get(&quot;name&quot;))) {
+        sqlBuf.append(&quot; and a.fascicule like &apos;%&quot; + queryMap.get(&quot;name&quot;)+&quot;%&apos; &quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&quot;phases&quot;))) {
+        sqlBuf.append(&quot; and a.phasesBusinessKey =&apos;&quot; + queryMap.get(&quot;phases&quot;)+&quot;&apos;&quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&quot;grade&quot;))) {
+        sqlBuf.append(&quot; and a.gradeBusinessKey =&apos;&quot; + queryMap.get(&quot;grade&quot;)+&quot;&apos;&quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&quot;subject&quot;))) {
+        sqlBuf.append(&quot; and a.subjectBusinessKey =&apos;&quot; + queryMap.get(&quot;subject&quot;)+&quot;&apos;&quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&quot;textBookVersion&quot;))) {
+        sqlBuf.append(&quot; and a.textBookVersionBusinessKey =&apos;&quot; + queryMap.get(&quot;textBookVersion&quot;)+&quot;&apos;&quot;);
+    }
+    sqlBuf.append(&quot; order by id desc &quot;);
+    fasciculeList = Fascicule.findAll(sqlBuf.toString(),[max:pageSize, offset: (currentPage-1)*pageSize]);
+    fasciculeList.each { fascicule-&gt;
+        FasciculeVo fasciculeVo=new FasciculeVo();
+        ConvertSuperUtil.convertSimple(fascicule,fasciculeVo);
+        if(Const.isNotNull(Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey))){
+            fasciculeVo.phasesName=Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey).name;
+        }
+        if(Const.isNotNull(BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey))){
+            fasciculeVo.gradeName=BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey).name;
+        }
+        if(Const.isNotNull(Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey))){
+            fasciculeVo.subjectName=Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey).name;
+        }
+        if(Const.isNotNull(TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey))){
+            fasciculeVo.textBookVersionName=TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey).name;
+        }
+        fasciculeVoList.add(fasciculeVo);
+    }
+    pageResultVo.result = fasciculeVoList
+    pageResultVo.total = Fascicule.findAll(sqlBuf.toString()).size()
+    return pageResultVo
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/25/学科，年级，出版社，册等基础数据调用资料/" data-id="cim7dof9k00001kqslomozy7e" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/25/我的第一篇博文/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">我的第一篇博文</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/25/学科，年级，出版社，册等基础数据调用资料/">学科，年级，出版社，册等基础数据调用资料</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/25/我的第一篇博文/">我的第一篇博文</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/25/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 黑志强<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
