@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>学行，温习</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-03-25T07:23:44.034Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>黑志强</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>学科，年级，出版社，册等基础数据调用资料</title>
+    <link href="http://yoursite.com/2016/03/25/%E5%AD%A6%E7%A7%91%EF%BC%8C%E5%B9%B4%E7%BA%A7%EF%BC%8C%E5%87%BA%E7%89%88%E7%A4%BE%EF%BC%8C%E5%86%8C%E7%AD%89%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E8%B0%83%E7%94%A8%E8%B5%84%E6%96%99/"/>
+    <id>http://yoursite.com/2016/03/25/学科，年级，出版社，册等基础数据调用资料/</id>
+    <published>2016-03-25T06:25:37.000Z</published>
+    <updated>2016-03-25T07:23:44.034Z</updated>
+    
+    <content type="html">&lt;ul&gt;
+&lt;li&gt;学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices&lt;/li&gt;
+&lt;li&gt;册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;学科&quot;&gt;&lt;a href=&quot;#学科&quot; class=&quot;headerlink&quot; title=&quot;学科&quot;&gt;&lt;/a&gt;学科&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@com.alibaba.dubbo.config.annotation.Reference
+private MetaDataServices metaDataServices;
+
+@RequestMapping(value = &amp;quot;findSubjectValue&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
+    public List&amp;lt;MetaDataVo&amp;gt; findSubjectValue(HttpServletRequest request){
+        List&amp;lt;SubjectsVo&amp;gt; list=metaDataServices.findAllSubjects()
+        List&amp;lt;MetaDataVo&amp;gt; metaDataVoList = new ArrayList&amp;lt;MetaDataVo&amp;gt;()
+        for(SubjectsVo subjects: list){
+                MetaDataVo metaDataVo = new MetaDataVo()
+                metaDataVo.keyCode = subjects.businessKey
+                metaDataVo.keyValue = subjects.name
+                metaDataVoList.add(metaDataVo)
+        }
+        return  metaDataVoList
+    }
+
+function getSubjects(){
+    $.ajax({
+        url: &amp;apos;metaData/findSubjectValue&amp;apos;,
+        dataType : &amp;apos;json&amp;apos;,
+        type : &amp;quot;POST&amp;quot;,
+        success : function(data) {
+            $(&amp;quot;#subjectsId&amp;quot;).empty()
+            var vhtml=&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;;
+            $.each(data,function(i,item){
+                vhtml+=&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+item.keyCode+&amp;quot;&amp;apos;&amp;gt;&amp;quot;+item.keyValue+&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;;
+            })
+            $(&amp;quot;#subjectsId&amp;quot;).html(vhtml);
+            multipleSelect()
+        }
+    });
+}
+
+&amp;lt;div class=&amp;quot;inline width-23&amp;quot;&amp;gt;
+    &amp;lt;label  class=&amp;quot;inline&amp;quot;&amp;gt;
+        学科：
+    &amp;lt;/label&amp;gt;
+    &amp;lt;select data-placeholder=&amp;quot;请选择&amp;quot;  id=&amp;quot;subjectsId&amp;quot;&amp;gt;
+        &amp;lt;option value=&amp;quot;&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;
+    &amp;lt;/select&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&quot;年级&quot;&gt;&lt;a href=&quot;#年级&quot; class=&quot;headerlink&quot; title=&quot;年级&quot;&gt;&lt;/a&gt;年级&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;function getGrade(){
+    $(&amp;quot;#gradeId&amp;quot;).empty()
+    $.ajax({
+        url: &amp;apos;metaData/findBaseGrade&amp;apos;,
+        dataType : &amp;apos;text&amp;apos;,
+        type : &amp;quot;POST&amp;quot;,
+        success : function(data) {
+            $(&amp;quot;#gradeId&amp;quot;).empty()
+            $(&amp;quot;#gradeId&amp;quot;).append(&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;+data.replace(&amp;apos;&amp;lt;select&amp;gt;&amp;apos;,&amp;apos;&amp;apos;).replace(&amp;apos;&amp;lt;/select&amp;gt;&amp;apos;,&amp;apos;&amp;apos;));
+        }
+    });
+}
+
+@RequestMapping(value = &amp;quot;findBaseGrade&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
+    public String findBaseGrade(HttpServletRequest request){
+        List&amp;lt;BaseGradeVo&amp;gt; list = metaDataServices.findBaseGrade()
+        StringBuffer jsonStrBuf=new StringBuffer()
+        jsonStrBuf.append(&amp;quot;&amp;lt;select&amp;gt;&amp;quot;)
+        for(BaseGradeVo baseGrade:list){
+            jsonStrBuf.append(&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+baseGrade.businessKey +&amp;quot;&amp;apos;&amp;gt;&amp;quot;+baseGrade.name +&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;)
+        }
+        jsonStrBuf.append(&amp;quot;&amp;lt;select&amp;gt;&amp;quot;)
+        return  jsonStrBuf.toString()
+    }    
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&quot;出版社&quot;&gt;&lt;a href=&quot;#出版社&quot; class=&quot;headerlink&quot; title=&quot;出版社&quot;&gt;&lt;/a&gt;出版社&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@com.alibaba.dubbo.config.annotation.Reference
+private TextBookVersionService textBookVersionService
+
+@RequestMapping(value = &amp;quot;findTextBookVersionValue&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
+    public List&amp;lt;MetaDataVo&amp;gt; findTextBookVersionValue(HttpServletRequest request){
+        List&amp;lt;TextBookVersionVo&amp;gt; list = textBookVersionService.findAllTextBookVersion()
+        List&amp;lt;MetaDataVo&amp;gt; metaDataVoList = new ArrayList&amp;lt;MetaDataVo&amp;gt;()
+        for(TextBookVersionVo version: list){
+            MetaDataVo metaDataVo = new MetaDataVo()
+            metaDataVo.keyCode = version.businessKey
+            metaDataVo.keyValue = version.name
+            metaDataVoList.add(metaDataVo)
+        }
+        return  metaDataVoList
+    }
+
+function getBookVersion(){
+    $(&amp;quot;#publishId&amp;quot;).empty()
+    $.ajax({
+        url: &amp;apos;metaData/findTextBookVersionValue&amp;apos;,
+        dataType : &amp;apos;json&amp;apos;,
+        type : &amp;quot;POST&amp;quot;,
+        success : function(data) {
+            $(&amp;quot;#publishId&amp;quot;).empty()
+            var vhtml=&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;;
+            $.each(data,function(i,item){
+                vhtml+=&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+item.keyCode+&amp;quot;&amp;apos;&amp;gt;&amp;quot;+item.keyValue+&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;;
+            })
+            $(&amp;quot;#publishId&amp;quot;).html(vhtml);
+        }
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&quot;册&quot;&gt;&lt;a href=&quot;#册&quot; class=&quot;headerlink&quot; title=&quot;册&quot;&gt;&lt;/a&gt;册&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@RequestMapping(value = &amp;apos;findFasciculeByPage&amp;apos;, method = RequestMethod.POST)
+public String findFasciculeByPage(HttpServletRequest request) {
+    String name = request.getParameter(&amp;quot;name&amp;quot;);
+    String phases = request.getParameter(&amp;quot;phases&amp;quot;)
+    String grade = request.getParameter(&amp;quot;grade&amp;quot;)
+    String subject = request.getParameter(&amp;quot;subject&amp;quot;)
+    String textBookVersion = request.getParameter(&amp;quot;textBookVersion&amp;quot;)
+    String isDelete = request.getParameter(&amp;quot;isDelete&amp;quot;)
+    Map&amp;lt;String,Object&amp;gt; queryMap = new HashMap&amp;lt;String,Object&amp;gt;()
+    queryMap.put(&amp;quot;name&amp;quot;,name);
+    queryMap.put(&amp;quot;phases&amp;quot;,phases);
+    queryMap.put(&amp;quot;grade&amp;quot;,grade);
+    queryMap.put(&amp;quot;subject&amp;quot;,subject);
+    queryMap.put(&amp;quot;textBookVersion&amp;quot;,textBookVersion);
+    queryMap.put(&amp;quot;isDelete&amp;quot;,isDelete)
+    Map&amp;lt;String, Integer&amp;gt; currentParam = JsonHelp.parserPageParms(request)
+    PageResultVo p = fasciculeServices.findFasciculeByPage(queryMap,currentParam[JsonHelp.CURRENT_SIZE], currentParam[JsonHelp.CURRENT_PAGE])
+    JsonHelp.getPageJson(p, currentParam[JsonHelp.CURRENT_PAGE],currentParam[JsonHelp.CURRENT_SIZE])
+}
+
+@Override
+PageResultVo findFasciculeByPage(Map&amp;lt;String, String&amp;gt; queryMap, int pageSize , int currentPage ) {
+    PageResultVo pageResultVo = new PageResultVo()
+    List&amp;lt;Fascicule&amp;gt; fasciculeList=new ArrayList&amp;lt;Fascicule&amp;gt;();
+    List&amp;lt;FasciculeVo&amp;gt; fasciculeVoList = new ArrayList&amp;lt;FasciculeVo&amp;gt;()
+    StringBuffer sqlBuf=new StringBuffer(&amp;quot;from Fascicule a where 1=1 &amp;quot;);
+
+    if(StringUtils.isNotBlank(queryMap.get(&amp;quot;isDelete&amp;quot;))){
+        sqlBuf.append(&amp;quot; and a.isDelete = &amp;apos;&amp;quot; + queryMap.get(&amp;quot;isDelete&amp;quot;) + &amp;quot;&amp;apos; &amp;quot;);
+    }
+
+    if(Const.isNotNull(queryMap.get(&amp;quot;name&amp;quot;))) {
+        sqlBuf.append(&amp;quot; and a.fascicule like &amp;apos;%&amp;quot; + queryMap.get(&amp;quot;name&amp;quot;)+&amp;quot;%&amp;apos; &amp;quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&amp;quot;phases&amp;quot;))) {
+        sqlBuf.append(&amp;quot; and a.phasesBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;phases&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&amp;quot;grade&amp;quot;))) {
+        sqlBuf.append(&amp;quot; and a.gradeBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;grade&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&amp;quot;subject&amp;quot;))) {
+        sqlBuf.append(&amp;quot; and a.subjectBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;subject&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
+    }
+    if(Const.isNotNull(queryMap.get(&amp;quot;textBookVersion&amp;quot;))) {
+        sqlBuf.append(&amp;quot; and a.textBookVersionBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;textBookVersion&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
+    }
+    sqlBuf.append(&amp;quot; order by id desc &amp;quot;);
+    fasciculeList = Fascicule.findAll(sqlBuf.toString(),[max:pageSize, offset: (currentPage-1)*pageSize]);
+    fasciculeList.each { fascicule-&amp;gt;
+        FasciculeVo fasciculeVo=new FasciculeVo();
+        ConvertSuperUtil.convertSimple(fascicule,fasciculeVo);
+        if(Const.isNotNull(Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey))){
+            fasciculeVo.phasesName=Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey).name;
+        }
+        if(Const.isNotNull(BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey))){
+            fasciculeVo.gradeName=BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey).name;
+        }
+        if(Const.isNotNull(Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey))){
+            fasciculeVo.subjectName=Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey).name;
+        }
+        if(Const.isNotNull(TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey))){
+            fasciculeVo.textBookVersionName=TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey).name;
+        }
+        fasciculeVoList.add(fasciculeVo);
+    }
+    pageResultVo.result = fasciculeVoList
+    pageResultVo.total = Fascicule.findAll(sqlBuf.toString()).size()
+    return pageResultVo
+}
+&lt;/code&gt;&lt;/pre&gt;</content>
+    
+    <summary type="html">
+    
+      &lt;ul&gt;
+&lt;li&gt;学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices&lt;/li&gt;
+&lt;li&gt;册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>我的第一篇博文</title>
+    <link href="http://yoursite.com/2016/03/25/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E6%96%87/"/>
+    <id>http://yoursite.com/2016/03/25/我的第一篇博文/</id>
+    <published>2016-03-25T06:25:33.000Z</published>
+    <updated>2016-03-25T06:39:11.762Z</updated>
+    
+    <content type="html">&lt;p&gt;##对目前几个主流的开源搜索框架进行调研分析&lt;/p&gt;
+&lt;p&gt;###Apache Solr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;先进的全文检索功能：Solr提供了强大的匹配能力，包括词组、通配符、连接、分组等等。&lt;/li&gt;
+&lt;li&gt;为高流量进行了性能优化：在世界各地的应用中已被证明。&lt;/li&gt;
+&lt;li&gt;基于标准的开放接口：XML、JSON和HTTP等。&lt;/li&gt;
+&lt;li&gt;综合管理界面：Solr内置了一个用户管理界面，使你的Solr实例更易于管理和控制。&lt;/li&gt;
+&lt;li&gt;轻松的监控：Solr通过JMX导出统计信息用于监控。&lt;/li&gt;
+&lt;li&gt;高度可扩展性及容错性：由于建立在久经考验的Apache Zookeeper上，Solr很容易扩展和裁剪。&lt;/li&gt;
+&lt;li&gt;灵活性、适应性、配置简单：适应各种需求的同时简化配置。&lt;/li&gt;
+&lt;li&gt;准实时索引：Solr利用了Lucene的准实时索引功能。&lt;/li&gt;
+&lt;li&gt;可扩展的插件架构：Solr发布了很多定义良好的扩展点，使其很容易的插入索引和时间查询等插件。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;Lucene 和 solr 比较&lt;/p&gt;
+&lt;p&gt;Lucene是一套信息检索工具包，但并不包含搜索引擎系统，它包含了索引结构、读写索引工具、相关性工具、排序等功能，因此在使用Lucene时你仍需要关注搜索引擎系统，例如数据获取、解析、分词等方面的东西。而Solr的目标是打造一款企业级的搜索引擎系统，因此它更接近于我们认识到的搜索引擎系统，它是一个搜索引擎服务，通过各种API可以让你的应用使用搜索服务，而不需要将搜索逻辑耦合在应用中。而且Solr可以根据配置文件定义数据解析的方式，更像是一个搜索框架，它也支持主从、热换库等操作。还添加了飘红、facet等搜索引擎常见功能的支持。因而，Lucene使用上更加灵活，但是你需要自己处理搜素引擎系统架构，以及其他附加附加功能的实现。而Solr帮你做了更多，但是是一个处于高层的框架，Lucene很多新特性不能及时向上透传，所以有时候可能发现需要一个功能，Lucene是支持的，但是Solr上已经看不到相关接口。&lt;/p&gt;
+&lt;p&gt;Lucene更像是一个SDK。 有完整的API族以及对应的实现。你可以利用这些在自己的应用里实现高级查询（基于倒排索引技术的），Lucene对单机或者桌面应用很实用很方便。但是Lucene，需要开发者自己维护索引文件，在多机环境中备份同步索引文件很是麻烦。于是，就有了Solr。 而Solr是一个有HTTP接口的基于Lucene的查询服务器，封装了很多Lucene细节，自己的应用可以直接利用诸如 …/solr?q=abc 这样的HTTP GET/POST请求去查询，维护修改索引。&lt;/p&gt;
+&lt;h3 id=&quot;与Lucene-4-10配合的中文分词比较&quot;&gt;&lt;a href=&quot;#与Lucene-4-10配合的中文分词比较&quot; class=&quot;headerlink&quot; title=&quot;与Lucene 4.10配合的中文分词比较&quot;&gt;&lt;/a&gt;与Lucene 4.10配合的中文分词比较&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;mmseg4j：支持Lucene 4.10，且在github中最新提交代码是2014年6月，从09年～14年一共有：18个版本，也就是一年几乎有3个大小版本，有较大的活跃度，用了mmseg算法。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;IK-analyzer： 支持Lucene 4.10从2006年12月推出1.0版开始， IKAnalyzer已经推出了4个大版本。最初，它是以开源项目Luence为应用主体的，结合词典分词和文法分析算法的中文分词组件。从3.0版本开 始，IK发展为面向Java的公用分词组件，独立于Lucene项目，同时提供了对Lucene的默认优化实现。在2012版本中，IK实现了简单的分词 歧义排除算法，标志着IK分词器从单纯的词典分词向模拟语义分词衍化。 但是也就是2012年12月后没有在更新。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Jcseg：最新版本在git.oschina.net/lionsoul/jcseg，支持Lucene 4.10，作者有较高的活跃度。利用mmseg算法。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;测试结果&quot;&gt;&lt;a href=&quot;#测试结果&quot; class=&quot;headerlink&quot; title=&quot;测试结果&quot;&gt;&lt;/a&gt;测试结果&lt;/h4&gt;&lt;p&gt;从几个指标对比来看：IK-analyzer的准确度稍差，Jcseg的时间消耗稍差&lt;/p&gt;
+&lt;p&gt;时间消耗上：在索引创建1,003,057 items, totalling 2.8 GB的文件:&lt;/p&gt;
+&lt;p&gt;将其索引放入磁盘&lt;/p&gt;
+&lt;p&gt;Jcseg + Lucene建索引消耗：            516971 total milliseconds&lt;/p&gt;
+&lt;p&gt;mmseg4j + Lucene建索引消耗：          256805 total milliseconds&lt;/p&gt;
+&lt;p&gt;IK-Analyzer + Lucene建索引消耗：      445591 total milliseconds&lt;/p&gt;
+&lt;p&gt;将索引放在内存中&lt;/p&gt;
+&lt;p&gt;Jcseg + Lucene 建索引消耗：       510146 total milliseconds&lt;/p&gt;
+&lt;p&gt;mmseg4j + Lucene建索引消耗：      262682 total milliseconds&lt;/p&gt;
+&lt;p&gt;IK-Analyzer + Lucene建索引消耗：  436900 total milliseconds&lt;/p&gt;
+&lt;p&gt;综上所有因素：&lt;/p&gt;
+&lt;p&gt;准确率为：Jcseg &amp;gt; mmseg4j &amp;gt; IK-Analyzer。&lt;/p&gt;
+&lt;p&gt;内存消耗和CPU使用率上，几个都在一个数量级上，很难分出胜负。&lt;/p&gt;
+&lt;p&gt;但是在时间消耗上明显mmseg4j的优势非常突出。&lt;/p&gt;
+&lt;p&gt;从活跃度来看，mmseg4j的活跃度也是非常可喜的。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&quot;http://www.hansight.com/blog-lucene4.10-with-chinese-segment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.hansight.com/blog-lucene4.10-with-chinese-segment.html&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;sphinx-vs-solr&quot;&gt;&lt;a href=&quot;#sphinx-vs-solr&quot; class=&quot;headerlink&quot; title=&quot;sphinx vs solr&quot;&gt;&lt;/a&gt;sphinx vs solr&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;中文分词的支持比较&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sphinx目前只支持mmseg3,sphinx for chinese两种分词，目前大家使用的比较多的是mmseg3。mmseg3的词库需要预先编译，不利于词库的扩充。&lt;/p&gt;
+&lt;p&gt;Solr目前支持的词库比较多，目前支持的有庖丁，IK，mmsegj4,通过比较分词效果，IK在分词的查全和查准的效果上更好一些。IK分词支持设置停用词和扩展词库，扩展词库每个词一行的方式进行扩展。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;从Mysql数据库索引数据的支持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sphinx可以通过配置数据源的方式直接从mysql中索引数据，在数据量比较大的时候，可以设置主索引+增量索引的方式来同步数据。但是主索引需要是根据Ｍysql表的主键Ｉd来设置索引范围，比如Ｉd小于9000,000，Ｉd大于9000,000的通过增量索引来同步。这种只适应Ｉd小于9000,000的数据更新频繁的情况。&lt;br&gt;如果主索引和增量索引是以记录的最后更新时间来区分的话，由于主索引和增量索引使用的是2个不同的索引文件，这就会造成主索引和增量索引中的数据不一致，导致检索时出现本不该出现的记录。这种情况就需要把增量索引合并到主索引中，如果主索引的数据比较大，不确定合并的时间需要多少。&lt;br&gt;solr索引mysql数据时，可以配置成主索引+增量索引，主索引和增量索引之间以更新的时间戳为分割线，solr会记录每次更新的时间戳。由于solr的增量索引和增量索引使用的都是一个索引文件，所以在执行增量索引时会自动合并到最终的索引中。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实时检索的支持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sphinx本身不支持中文分词，Coreseek是现在用的最多的sphinx中文全文检索，它提供了为Sphinx设计的中文分词包LibMMSeg。Coreseek目前稳定版是3.2.14(基于Sphinx 0.9.9 release开发)，该版本还不支持实时检索。目前Ｃoresekk4.1还是测试版，测试版本支持实时检索，但是不太稳定。&lt;/p&gt;
+&lt;p&gt;solr的索引支持实时新增、更新和删除，可以根据记录的最后更新时间实现增量更新，在增量更新数据不多的情况下，可以设置增量更新任务为10秒更新一次。从而达到数据的实时同步。&lt;/p&gt;
+&lt;p&gt;Sphinx的优点是，简历索引，搜索都比较快&lt;br&gt;缺点是对实时性支持比较差，语法上相对弱一些 &lt;/p&gt;
+&lt;p&gt;在java中，那么从扩展性上来讲solr的当然好些，毕竟是一个原生的java应用。但是从使用上来说我觉得sphinx反而简单些&lt;/p&gt;
+&lt;p&gt;使用java开发推荐solr　他是基于lucene的对中文支持已经比较完善了。。中文分词也有。sphinx对支持中文比较差，要用修改过的才可以比如 coreseek&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;##对目前几个主流的开源搜索框架进行调研分析&lt;/p&gt;
+&lt;p&gt;###Apache Solr&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;先进的全文检索功能：Solr提供了强大的匹配能力，包括词组、通配符、连接、分组等等。&lt;/li&gt;
+&lt;li&gt;为高流量进行了性能优化：在世界各地的应用中已被证明。&lt;/li&gt;
+&lt;li&gt;基于标准的开放接口：XML、JSON和HTTP等。&lt;/li&gt;
+&lt;li&gt;综合管理界面：Solr内置了一个用户管理界面，使你的Solr实例更易于管理和控制。&lt;/li&gt;
+&lt;li&gt;轻松的监控：Solr通过JMX导出统计信息用于监控。&lt;/li&gt;
+&lt;li&gt;高度可扩展性及容错性：由于建立在久经考验的Apache Zookeeper上，Solr很容易扩展和裁剪。&lt;/li&gt;
+&lt;li&gt;灵活性、适应性、配置简单：适应各种需求的同时简化配置。&lt;/li&gt;
+&lt;li&gt;准实时索引：Solr利用了Lucene的准实时索引功能。&lt;/li&gt;
+&lt;li&gt;可扩展的插件架构：Solr发布了很多定义良好的扩展点，使其很容易的插入索引和时间查询等插件。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://yoursite.com/2016/03/25/hello-world/"/>
+    <id>http://yoursite.com/2016/03/25/hello-world/</id>
+    <published>2016-03-25T06:03:19.835Z</published>
+    <updated>2016-03-25T06:03:19.837Z</updated>
+    
+    <content type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Run-server&quot;&gt;&lt;a href=&quot;#Run-server&quot; class=&quot;headerlink&quot; title=&quot;Run server&quot;&gt;&lt;/a&gt;Run server&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/server.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Generate-static-files&quot;&gt;&lt;a href=&quot;#Generate-static-files&quot; class=&quot;headerlink&quot; title=&quot;Generate static files&quot;&gt;&lt;/a&gt;Generate static files&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo generate&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/generating.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Generating&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Deploy-to-remote-sites&quot;&gt;&lt;a href=&quot;#Deploy-to-remote-sites&quot; class=&quot;headerlink&quot; title=&quot;Deploy to remote sites&quot;&gt;&lt;/a&gt;Deploy to remote sites&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo deploy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/deployment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deployment&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
