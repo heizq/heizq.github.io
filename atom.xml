@@ -39,26 +39,6 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="http://yoursite.com/2016/03/31/README/"/>
-    <id>http://yoursite.com/2016/03/31/README/</id>
-    <published>2016-03-31T08:40:00.093Z</published>
-    <updated>2016-03-31T08:40:00.095Z</updated>
-    
-    <content type="html">&lt;h1 id=&quot;blog-resource&quot;&gt;&lt;a href=&quot;#blog-resource&quot; class=&quot;headerlink&quot; title=&quot;blog-resource&quot;&gt;&lt;/a&gt;blog-resource&lt;/h1&gt;&lt;p&gt;blog resource&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;blog-resource&quot;&gt;&lt;a href=&quot;#blog-resource&quot; class=&quot;headerlink&quot; title=&quot;blog-resource&quot;&gt;&lt;/a&gt;blog-resource&lt;/h1&gt;&lt;p&gt;blog resource&lt;/p&gt;
-
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>使用node.js,hexo,github建立个人博客</title>
     <link href="http://yoursite.com/2016/03/31/%E4%BD%BF%E7%94%A8node-js-hexo-github%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
     <id>http://yoursite.com/2016/03/31/使用node-js-hexo-github建立个人博客/</id>
