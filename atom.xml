@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-03-25T07:23:44.034Z</updated>
+  <updated>2016-03-31T08:09:08.015Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,195 +16,64 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>学科，年级，出版社，册等基础数据调用资料</title>
-    <link href="http://yoursite.com/2016/03/25/%E5%AD%A6%E7%A7%91%EF%BC%8C%E5%B9%B4%E7%BA%A7%EF%BC%8C%E5%87%BA%E7%89%88%E7%A4%BE%EF%BC%8C%E5%86%8C%E7%AD%89%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E8%B0%83%E7%94%A8%E8%B5%84%E6%96%99/"/>
-    <id>http://yoursite.com/2016/03/25/学科，年级，出版社，册等基础数据调用资料/</id>
-    <published>2016-03-25T06:25:37.000Z</published>
-    <updated>2016-03-25T07:23:44.034Z</updated>
+    <title>使用node.js,hexo,github建立个人博客</title>
+    <link href="http://yoursite.com/2016/03/31/%E4%BD%BF%E7%94%A8node-js-hexo-github%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://yoursite.com/2016/03/31/使用node-js-hexo-github建立个人博客/</id>
+    <published>2016-03-31T07:30:00.000Z</published>
+    <updated>2016-03-31T08:09:08.015Z</updated>
     
-    <content type="html">&lt;ul&gt;
-&lt;li&gt;学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices&lt;/li&gt;
-&lt;li&gt;册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。&lt;/li&gt;
+    <content type="html">&lt;h1 id=&quot;使用node-js-hexo-github建立个人博客&quot;&gt;&lt;a href=&quot;#使用node-js-hexo-github建立个人博客&quot; class=&quot;headerlink&quot; title=&quot;使用node.js,hexo,github建立个人博客&quot;&gt;&lt;/a&gt;使用node.js,hexo,github建立个人博客&lt;/h1&gt;&lt;h2 id=&quot;安装node-js&quot;&gt;&lt;a href=&quot;#安装node-js&quot; class=&quot;headerlink&quot; title=&quot;安装node.js&quot;&gt;&lt;/a&gt;安装node.js&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;下载安装node.js&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org/en/&quot; title=&quot;node.js&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://nodejs.org/en/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;安装hexo&quot;&gt;&lt;a href=&quot;#安装hexo&quot; class=&quot;headerlink&quot; title=&quot;安装hexo&quot;&gt;&lt;/a&gt;安装hexo&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;打开官网&lt;a href=&quot;https://hexo.io/zh-cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://hexo.io/zh-cn/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;选择需要建立博客的路径，例如：我的博客路径：F:\blogs&lt;br&gt;进入blogs，打开所在路径的命令行窗口：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+npm install hexo-cli -g
+hexo init blog
+cd blog
+npm install
+hexo server
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;可以通过访问 localhost:4000 查看博客。&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;hr&gt;
-&lt;h2 id=&quot;学科&quot;&gt;&lt;a href=&quot;#学科&quot; class=&quot;headerlink&quot; title=&quot;学科&quot;&gt;&lt;/a&gt;学科&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@com.alibaba.dubbo.config.annotation.Reference
-private MetaDataServices metaDataServices;
-
-@RequestMapping(value = &amp;quot;findSubjectValue&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
-    public List&amp;lt;MetaDataVo&amp;gt; findSubjectValue(HttpServletRequest request){
-        List&amp;lt;SubjectsVo&amp;gt; list=metaDataServices.findAllSubjects()
-        List&amp;lt;MetaDataVo&amp;gt; metaDataVoList = new ArrayList&amp;lt;MetaDataVo&amp;gt;()
-        for(SubjectsVo subjects: list){
-                MetaDataVo metaDataVo = new MetaDataVo()
-                metaDataVo.keyCode = subjects.businessKey
-                metaDataVo.keyValue = subjects.name
-                metaDataVoList.add(metaDataVo)
-        }
-        return  metaDataVoList
-    }
-
-function getSubjects(){
-    $.ajax({
-        url: &amp;apos;metaData/findSubjectValue&amp;apos;,
-        dataType : &amp;apos;json&amp;apos;,
-        type : &amp;quot;POST&amp;quot;,
-        success : function(data) {
-            $(&amp;quot;#subjectsId&amp;quot;).empty()
-            var vhtml=&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;;
-            $.each(data,function(i,item){
-                vhtml+=&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+item.keyCode+&amp;quot;&amp;apos;&amp;gt;&amp;quot;+item.keyValue+&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;;
-            })
-            $(&amp;quot;#subjectsId&amp;quot;).html(vhtml);
-            multipleSelect()
-        }
-    });
-}
-
-&amp;lt;div class=&amp;quot;inline width-23&amp;quot;&amp;gt;
-    &amp;lt;label  class=&amp;quot;inline&amp;quot;&amp;gt;
-        学科：
-    &amp;lt;/label&amp;gt;
-    &amp;lt;select data-placeholder=&amp;quot;请选择&amp;quot;  id=&amp;quot;subjectsId&amp;quot;&amp;gt;
-        &amp;lt;option value=&amp;quot;&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;
-    &amp;lt;/select&amp;gt;
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;h2 id=&quot;年级&quot;&gt;&lt;a href=&quot;#年级&quot; class=&quot;headerlink&quot; title=&quot;年级&quot;&gt;&lt;/a&gt;年级&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;function getGrade(){
-    $(&amp;quot;#gradeId&amp;quot;).empty()
-    $.ajax({
-        url: &amp;apos;metaData/findBaseGrade&amp;apos;,
-        dataType : &amp;apos;text&amp;apos;,
-        type : &amp;quot;POST&amp;quot;,
-        success : function(data) {
-            $(&amp;quot;#gradeId&amp;quot;).empty()
-            $(&amp;quot;#gradeId&amp;quot;).append(&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;+data.replace(&amp;apos;&amp;lt;select&amp;gt;&amp;apos;,&amp;apos;&amp;apos;).replace(&amp;apos;&amp;lt;/select&amp;gt;&amp;apos;,&amp;apos;&amp;apos;));
-        }
-    });
-}
-
-@RequestMapping(value = &amp;quot;findBaseGrade&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
-    public String findBaseGrade(HttpServletRequest request){
-        List&amp;lt;BaseGradeVo&amp;gt; list = metaDataServices.findBaseGrade()
-        StringBuffer jsonStrBuf=new StringBuffer()
-        jsonStrBuf.append(&amp;quot;&amp;lt;select&amp;gt;&amp;quot;)
-        for(BaseGradeVo baseGrade:list){
-            jsonStrBuf.append(&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+baseGrade.businessKey +&amp;quot;&amp;apos;&amp;gt;&amp;quot;+baseGrade.name +&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;)
-        }
-        jsonStrBuf.append(&amp;quot;&amp;lt;select&amp;gt;&amp;quot;)
-        return  jsonStrBuf.toString()
-    }    
-&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;h2 id=&quot;出版社&quot;&gt;&lt;a href=&quot;#出版社&quot; class=&quot;headerlink&quot; title=&quot;出版社&quot;&gt;&lt;/a&gt;出版社&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@com.alibaba.dubbo.config.annotation.Reference
-private TextBookVersionService textBookVersionService
-
-@RequestMapping(value = &amp;quot;findTextBookVersionValue&amp;quot;, method = RequestMethod.POST,produces =[&amp;quot;application/json;charset=UTF-8&amp;quot;])
-    public List&amp;lt;MetaDataVo&amp;gt; findTextBookVersionValue(HttpServletRequest request){
-        List&amp;lt;TextBookVersionVo&amp;gt; list = textBookVersionService.findAllTextBookVersion()
-        List&amp;lt;MetaDataVo&amp;gt; metaDataVoList = new ArrayList&amp;lt;MetaDataVo&amp;gt;()
-        for(TextBookVersionVo version: list){
-            MetaDataVo metaDataVo = new MetaDataVo()
-            metaDataVo.keyCode = version.businessKey
-            metaDataVo.keyValue = version.name
-            metaDataVoList.add(metaDataVo)
-        }
-        return  metaDataVoList
-    }
-
-function getBookVersion(){
-    $(&amp;quot;#publishId&amp;quot;).empty()
-    $.ajax({
-        url: &amp;apos;metaData/findTextBookVersionValue&amp;apos;,
-        dataType : &amp;apos;json&amp;apos;,
-        type : &amp;quot;POST&amp;quot;,
-        success : function(data) {
-            $(&amp;quot;#publishId&amp;quot;).empty()
-            var vhtml=&amp;quot;&amp;lt;option value=\&amp;quot;\&amp;quot;&amp;gt;请选择&amp;lt;/option&amp;gt;&amp;quot;;
-            $.each(data,function(i,item){
-                vhtml+=&amp;quot;&amp;lt;option value=&amp;apos;&amp;quot;+item.keyCode+&amp;quot;&amp;apos;&amp;gt;&amp;quot;+item.keyValue+&amp;quot;&amp;lt;/option&amp;gt;&amp;quot;;
-            })
-            $(&amp;quot;#publishId&amp;quot;).html(vhtml);
-        }
-    });
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;h2 id=&quot;册&quot;&gt;&lt;a href=&quot;#册&quot; class=&quot;headerlink&quot; title=&quot;册&quot;&gt;&lt;/a&gt;册&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;@RequestMapping(value = &amp;apos;findFasciculeByPage&amp;apos;, method = RequestMethod.POST)
-public String findFasciculeByPage(HttpServletRequest request) {
-    String name = request.getParameter(&amp;quot;name&amp;quot;);
-    String phases = request.getParameter(&amp;quot;phases&amp;quot;)
-    String grade = request.getParameter(&amp;quot;grade&amp;quot;)
-    String subject = request.getParameter(&amp;quot;subject&amp;quot;)
-    String textBookVersion = request.getParameter(&amp;quot;textBookVersion&amp;quot;)
-    String isDelete = request.getParameter(&amp;quot;isDelete&amp;quot;)
-    Map&amp;lt;String,Object&amp;gt; queryMap = new HashMap&amp;lt;String,Object&amp;gt;()
-    queryMap.put(&amp;quot;name&amp;quot;,name);
-    queryMap.put(&amp;quot;phases&amp;quot;,phases);
-    queryMap.put(&amp;quot;grade&amp;quot;,grade);
-    queryMap.put(&amp;quot;subject&amp;quot;,subject);
-    queryMap.put(&amp;quot;textBookVersion&amp;quot;,textBookVersion);
-    queryMap.put(&amp;quot;isDelete&amp;quot;,isDelete)
-    Map&amp;lt;String, Integer&amp;gt; currentParam = JsonHelp.parserPageParms(request)
-    PageResultVo p = fasciculeServices.findFasciculeByPage(queryMap,currentParam[JsonHelp.CURRENT_SIZE], currentParam[JsonHelp.CURRENT_PAGE])
-    JsonHelp.getPageJson(p, currentParam[JsonHelp.CURRENT_PAGE],currentParam[JsonHelp.CURRENT_SIZE])
-}
-
-@Override
-PageResultVo findFasciculeByPage(Map&amp;lt;String, String&amp;gt; queryMap, int pageSize , int currentPage ) {
-    PageResultVo pageResultVo = new PageResultVo()
-    List&amp;lt;Fascicule&amp;gt; fasciculeList=new ArrayList&amp;lt;Fascicule&amp;gt;();
-    List&amp;lt;FasciculeVo&amp;gt; fasciculeVoList = new ArrayList&amp;lt;FasciculeVo&amp;gt;()
-    StringBuffer sqlBuf=new StringBuffer(&amp;quot;from Fascicule a where 1=1 &amp;quot;);
-
-    if(StringUtils.isNotBlank(queryMap.get(&amp;quot;isDelete&amp;quot;))){
-        sqlBuf.append(&amp;quot; and a.isDelete = &amp;apos;&amp;quot; + queryMap.get(&amp;quot;isDelete&amp;quot;) + &amp;quot;&amp;apos; &amp;quot;);
-    }
-
-    if(Const.isNotNull(queryMap.get(&amp;quot;name&amp;quot;))) {
-        sqlBuf.append(&amp;quot; and a.fascicule like &amp;apos;%&amp;quot; + queryMap.get(&amp;quot;name&amp;quot;)+&amp;quot;%&amp;apos; &amp;quot;);
-    }
-    if(Const.isNotNull(queryMap.get(&amp;quot;phases&amp;quot;))) {
-        sqlBuf.append(&amp;quot; and a.phasesBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;phases&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
-    }
-    if(Const.isNotNull(queryMap.get(&amp;quot;grade&amp;quot;))) {
-        sqlBuf.append(&amp;quot; and a.gradeBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;grade&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
-    }
-    if(Const.isNotNull(queryMap.get(&amp;quot;subject&amp;quot;))) {
-        sqlBuf.append(&amp;quot; and a.subjectBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;subject&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
-    }
-    if(Const.isNotNull(queryMap.get(&amp;quot;textBookVersion&amp;quot;))) {
-        sqlBuf.append(&amp;quot; and a.textBookVersionBusinessKey =&amp;apos;&amp;quot; + queryMap.get(&amp;quot;textBookVersion&amp;quot;)+&amp;quot;&amp;apos;&amp;quot;);
-    }
-    sqlBuf.append(&amp;quot; order by id desc &amp;quot;);
-    fasciculeList = Fascicule.findAll(sqlBuf.toString(),[max:pageSize, offset: (currentPage-1)*pageSize]);
-    fasciculeList.each { fascicule-&amp;gt;
-        FasciculeVo fasciculeVo=new FasciculeVo();
-        ConvertSuperUtil.convertSimple(fascicule,fasciculeVo);
-        if(Const.isNotNull(Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey))){
-            fasciculeVo.phasesName=Phases.findByBusinessKey(fasciculeVo.phasesBusinessKey).name;
-        }
-        if(Const.isNotNull(BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey))){
-            fasciculeVo.gradeName=BaseGrade.findByBusinessKey(fasciculeVo.gradeBusinessKey).name;
-        }
-        if(Const.isNotNull(Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey))){
-            fasciculeVo.subjectName=Subjects.findByBusinessKey(fasciculeVo.subjectBusinessKey).name;
-        }
-        if(Const.isNotNull(TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey))){
-            fasciculeVo.textBookVersionName=TextBookVersion.findByBusinessKey(fascicule.textBookVersionBusinessKey).name;
-        }
-        fasciculeVoList.add(fasciculeVo);
-    }
-    pageResultVo.result = fasciculeVoList
-    pageResultVo.total = Fascicule.findAll(sqlBuf.toString()).size()
-    return pageResultVo
-}
-&lt;/code&gt;&lt;/pre&gt;</content>
+&lt;h2 id=&quot;安装hexo-主题插件-Next&quot;&gt;&lt;a href=&quot;#安装hexo-主题插件-Next&quot; class=&quot;headerlink&quot; title=&quot;安装hexo 主题插件 Next&quot;&gt;&lt;/a&gt;安装hexo 主题插件 Next&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;在终端窗口下，定位到 Hexo 站点目录下。使用 Git checkout 代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+cd your-hexo-site
+git clone https://github.com/iissnan/hexo-theme-next themes/next
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;如果没有安装git 请先安装git。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;NexT的相关配置请参考&lt;a href=&quot;http://theme-next.iissnan.com/getting-started.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://theme-next.iissnan.com/getting-started.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;github-page&quot;&gt;&lt;a href=&quot;#github-page&quot; class=&quot;headerlink&quot; title=&quot;github page&quot;&gt;&lt;/a&gt;github page&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;登录github，新建 Repository ，设置Name为 yourname.github.io 例如：heizq.github.io&lt;/li&gt;
+&lt;li&gt;将仓库克隆到本地路径下，不要和blog路径在一起。&lt;pre&gt;&lt;code&gt;
+git clone https://github.com/username/username.github.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;通过以下命令生成新的博文&lt;br&gt;&lt;pre&gt;&lt;code&gt;&lt;br&gt;//通过以下命令生成新的博文&lt;br&gt;hexo new “博文名称”&lt;br&gt;//生成目标文件&lt;br&gt;hexo g&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将blog 下public 文件夹下的所有文件拷贝到 github仓库中去。&lt;br&gt;&lt;pre&gt;&lt;code&gt;&lt;br&gt;cd username.github.io&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;git add –all&lt;/p&gt;
+&lt;p&gt;git commit -m “Initial commit”&lt;/p&gt;
+&lt;p&gt;git push -u origin master&lt;br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这样就可以通过 username.github.io 访问你的博客了。&lt;/li&gt;
+&lt;/ul&gt;
+</content>
     
     <summary type="html">
     
-      &lt;ul&gt;
-&lt;li&gt;学科，年级，出版社 可以调用基础数据平台的接口 来自 MetaDataServices&lt;/li&gt;
-&lt;li&gt;册 由于基础数据平台的接口是分页的 ，代码如下，可以参考sql 自己修改一下。&lt;/li&gt;
-&lt;/ul&gt;
+      &lt;h1 id=&quot;使用node-js-hexo-github建立个人博客&quot;&gt;&lt;a href=&quot;#使用node-js-hexo-github建立个人博客&quot; class=&quot;headerlink&quot; title=&quot;使用node.js,hexo,github建立个人博客&quot;&gt;&lt;/a&gt;使用nod
     
     </summary>
     
@@ -294,33 +163,6 @@ PageResultVo findFasciculeByPage(Map&amp;lt;String, String&amp;gt; queryMap, int
 &lt;li&gt;准实时索引：Solr利用了Lucene的准实时索引功能。&lt;/li&gt;
 &lt;li&gt;可扩展的插件架构：Solr发布了很多定义良好的扩展点，使其很容易的插入索引和时间查询等插件。&lt;/li&gt;
 &lt;/ul&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2016/03/25/hello-world/"/>
-    <id>http://yoursite.com/2016/03/25/hello-world/</id>
-    <published>2016-03-25T06:03:19.835Z</published>
-    <updated>2016-03-25T06:03:19.837Z</updated>
-    
-    <content type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;Run-server&quot;&gt;&lt;a href=&quot;#Run-server&quot; class=&quot;headerlink&quot; title=&quot;Run server&quot;&gt;&lt;/a&gt;Run server&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/server.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;Generate-static-files&quot;&gt;&lt;a href=&quot;#Generate-static-files&quot; class=&quot;headerlink&quot; title=&quot;Generate static files&quot;&gt;&lt;/a&gt;Generate static files&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo generate&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/generating.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Generating&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;Deploy-to-remote-sites&quot;&gt;&lt;a href=&quot;#Deploy-to-remote-sites&quot; class=&quot;headerlink&quot; title=&quot;Deploy to remote sites&quot;&gt;&lt;/a&gt;Deploy to remote sites&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo deploy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/deployment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deployment&lt;/a&gt;&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
     
     </summary>
     
